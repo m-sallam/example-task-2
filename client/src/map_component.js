@@ -1,6 +1,7 @@
 /* global fetch, L */
 import React, { useEffect, useRef, useState } from 'react'
 import Moment from 'moment'
+import randomColor from 'randomcolor'
 
 const getRouteSummary = (locations) => {
   const to = Moment(locations[0].time).format('hh:mm DD.MM')
@@ -40,16 +41,19 @@ const MapComponent = () => {
       return // If map or locations not loaded yet.
     }
     // TODO(Task 1): Replace the single red polyline by the different segments on the map.
-    const latlons = locations.map(({ lat, lon }) => [lat, lon])
-    const polyline = L.polyline(latlons, { color: 'red' }).bindPopup(getRouteSummary(locations)).addTo(map.current)
-    map.current.fitBounds(polyline.getBounds())
-    return () => map.current.remove(polyline)
+    locations.forEach(trip => {
+      const latlons = trip.map(({ lat, lon }) => [lat, lon])
+      const color = randomColor({ luminosity: 'dark' })
+      const polyline = L.polyline(latlons, { color }).bindPopup(getRouteSummary(trip)).addTo(map.current)
+      map.current.fitBounds(polyline.getBounds())
+    })
+    return () => map.current.remove()
   }, [locations, map.current])
   // TODO(Task 2): Display location that the back-end returned on the map as a marker.
 
   return (
     <div>
-      {locations && `${locations.length} locations loaded`}
+      {locations && `${locations.flat().length} locations loaded`}
       {!locations && 'Loading...'}
       <div id='mapid' />
     </div>)
