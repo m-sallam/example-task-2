@@ -1,4 +1,5 @@
 const express = require('express')
+const nearestDate = require('nearest-date')
 const app = express()
 
 app.use((req, res, next) => {
@@ -39,7 +40,13 @@ app.get('/', (req, res) => {
 
 app.get('/location/:when', (req, res) => {
   // TODO(Task 2): Return the tracking data closest to `req.params.when` from `exampleData`.
-  res.send({})
+  const dates = exampleData.map(location => new Date(location.time))
+  const when = new Date(req.params.when)
+  const index = nearestDate(dates, when)
+  const location = exampleData.find(location => {
+    return location.time === dates[index].toISOString()
+  })
+  res.send({ location })
 })
 
 app.listen(3000, () => console.log('Example app listening on port 3000!'))

@@ -1,3 +1,49 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #667;
+}
+
 #mapid {
-  height: 560px;
+  height: 90vh;
+}
+
+.flex-grid {
+  display: flex;
+  padding: 10px;
+  height: 90vh;
+
+}
+
+.col-1 {
+  flex: 1;
+  position: relative;
+  margin-right: 10px;
+}
+
+.col-2 {
+  flex: 2;
+  margin-left: 10px;
+}
+
+.header {
+  position: absolute;
+  top: 10%;
+  text-align: center;
+}
+
+.slider {
+  position: absolute;
+  top: 50%;
+  left: 5%;
+  transform: translateY(-50%);
+  text-align: center;
+  width: 90%
+}
+
+h4 {
+  position: absolute;
+  top: 90%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: 100;
 }

@@ -9,7 +9,7 @@ const getRouteSummary = (locations) => {
   return `${from} - ${to}`
 }
 
-const MapComponent = () => {
+const MapComponent = ({ onLocationsFetched, selectedTimeValue }) => {
   const map = useRef()
   const [locations, setLocations] = useState()
   // Request location data.
@@ -18,9 +18,9 @@ const MapComponent = () => {
       .then(response => response.json())
       .then((json) => {
         setLocations(json)
+        onLocationsFetched(json)
       })
   }, [])
-  // TODO(Task 2): Request location closest to specified datetime from the back-end.
 
   // Initialize map.
   useEffect(() => {
@@ -50,12 +50,25 @@ const MapComponent = () => {
     return () => map.current.remove()
   }, [locations, map.current])
   // TODO(Task 2): Display location that the back-end returned on the map as a marker.
+  // TODO(Task 2): Request location closest to specified datetime from the back-end.
+  useEffect(() => {
+    const markers = L.layerGroup().addTo(map.current)
+    if (selectedTimeValue) { // skip initial load
+      // can also send the selectedTimeValue with no problem
+      fetch(`http://localhost:3000/location/${new Date(selectedTimeValue).toISOString()}`)
+        .then(response => response.json())
+        .then((json) => {
+          L.marker([json.location.lat, json.location.lon]).addTo(markers)
+        })
+    }
+    return () => markers.clearLayers()
+  }, [selectedTimeValue])
 
   return (
     <div>
-      {locations && `${locations.flat().length} locations loaded`}
       {!locations && 'Loading...'}
       <div id='mapid' />
+      {/* {locations && `${locations.flat().length} locations loaded`} */}
     </div>)
 }
 
